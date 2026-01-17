@@ -2,8 +2,10 @@ package com.example.phoenixcodecrafter.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.HandlerMethodValidationException;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -25,4 +27,25 @@ import java.util.Map;
             return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
         }
 
-}
+
+        // REQUIRED for List<@Valid User> in Spring Boot 3+
+        @ExceptionHandler(HandlerMethodValidationException.class)
+        public ResponseEntity<Map<String, String>> handleHandlerMethodValidation(
+                HandlerMethodValidationException ex) {
+
+            Map<String, String> errors = new HashMap<>();
+
+            ex.getAllErrors().forEach(error -> {
+                if (error instanceof FieldError fieldError) {
+                    errors.put(fieldError.getField(),
+                            fieldError.getDefaultMessage());
+                } else {
+                    // fallback for object-level errors
+                    errors.put(error.getCodes()[0],
+                            error.getDefaultMessage());
+                }
+            });
+
+            return ResponseEntity.badRequest().body(errors);
+        }
+    }
