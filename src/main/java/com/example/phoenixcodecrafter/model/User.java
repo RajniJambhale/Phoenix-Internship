@@ -1,9 +1,13 @@
 package com.example.phoenixcodecrafter.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
@@ -17,4 +21,8 @@ public class User {
         @Email(message = "Enter valid email Id")
         @NotBlank(message = "Email should not blank")
         private String email;
+
+        @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+        @JsonManagedReference
+        private List<Post> posts = new ArrayList<>();
 }
