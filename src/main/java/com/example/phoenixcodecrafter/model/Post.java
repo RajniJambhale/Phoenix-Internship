@@ -1,5 +1,6 @@
 package com.example.phoenixcodecrafter.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,5 +27,10 @@ public class Post {
 
     @UpdateTimestamp
     private LocalDateTime updatedDate;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    @JsonBackReference
+    private User user;
 
 }
