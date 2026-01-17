@@ -1,5 +1,6 @@
 package com.example.phoenixcodecrafter.controller;
 
+import com.example.phoenixcodecrafter.exception.UserNotFoundException;
 import com.example.phoenixcodecrafter.model.User;
 import com.example.phoenixcodecrafter.service.UserService;
 import jakarta.validation.Valid;
@@ -33,5 +34,18 @@ public class UserController {
     {
         return userService.createUser(users);
     }
+
+    @GetMapping("/email")
+    public ResponseEntity<List<User>> getUserByEmail(@RequestParam String email) {
+
+        List<User> users = userService.getUserByEmail(email);
+
+        if (users.isEmpty()) {
+            throw new UserNotFoundException("User not found with email: " + email);
+        }
+        return ResponseEntity.ok(users);
+    }
+
+
 }
 
