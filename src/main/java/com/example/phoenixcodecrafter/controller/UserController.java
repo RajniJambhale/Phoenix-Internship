@@ -8,10 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api")
 public class UserController {
 
     @Autowired
@@ -45,6 +47,33 @@ public class UserController {
         }
         return ResponseEntity.ok(users);
     }
+
+    @PutMapping("user/{id}")
+    public ResponseEntity<Map<String, Object>> updateUser(
+            @PathVariable Integer id,
+            @RequestBody User userDetails) {
+
+        User updatedUser = userService.updateUserById(id, userDetails);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", "success");
+        response.put("message", "User updated successfully with id: " + id);
+        response.put("user", updatedUser);
+
+        return ResponseEntity.ok(response);
+    }
+
+
+    @DeleteMapping("user/{id}")
+    public ResponseEntity<Map<String, String>> deleteUser(@PathVariable int id) {
+        userService.deleteUserById(id);
+        Map<String, String> response = new HashMap<>();
+        response.put("status", "success");
+        response.put("message", "User deleted successfully with id: " + id);
+
+        return ResponseEntity.ok(response);
+    }
+
 
 
 }
