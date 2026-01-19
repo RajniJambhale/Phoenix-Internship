@@ -25,4 +25,10 @@ public class User {
         @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
         @JsonManagedReference
         private List<Post> posts = new ArrayList<>();
+
+        @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+        @JsonManagedReference
+        private List<Comment> comments = new ArrayList<>();
+
+
 }
